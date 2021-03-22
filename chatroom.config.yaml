@@ -1,0 +1,17 @@
+port: 9015
+gateways:
+  ws:
+    type: websocket
+    url: ws://chatroom.covistra.com
+transports:
+  redis:
+    type: redis
+    host: localhost
+    port: 6380
+stores:
+  memory:
+    type: memory
+    limit: 1000
+  main:
+    type: rxdb
+    file: ./data/main.db

@@ -1,14 +1,41 @@
-import { system } from "../../src/index.js";
+export default provide(({ system }) => {
+  console.log("initializing system scope");
 
-const chatroom = system("samples:chatroom");
+  const chatroom = system("lqs:chatroom");
 
-// transports
-// gateway
-// store
-// schema
-// supported actions
+  // because this is the system scope, we force a transport and gateway.
+  chatroom.transport("redis");
+  chatroom.gateway("ws");
+  chatroom.store("main"); // per scope, but all spawned scopes will default to this
 
-// subscribe to org:identity scope
-// mount users with the chatroom:* permission only (filter out the others)
+  // we can configure a JSON schema to help us validate state after reducers have executed
+  chatroom.schema({
+    properties: {
+      name: { type: "string" },
+      version: { type: "string" },
+      rooms: { type: "array", items: { $ref: "chatroom:room" } },
+      users: { type: "array", items: { type: "subscription", $ref: "lqs:security", target: "default", selector: "$.users" } },
+    },
+    required: ["name", "version", "rooms", "users"],
+  });
 
-//
+  // Will be called when system scope is initialized
+  chatroom.initializer(async function (state, { scope, config, schema }) {
+    console.log("initializing system scope state");
+    // Use the schema details to generate our security subscription. This will connect to the security scope and mount only users
+    state.users = scope.subscribe(schema.getField("users"));
+    // Initialize default state
+    state.name = config.get("system.name") || "lqs";
+    state.version = config.get("system.version") || "1.0";
+    state.rooms = [];
+  });
+
+  chatroom.finalizer(async function (state, { scope }) {
+    console.log("finalize system scope");
+    scope.unsubscribe(state.users);
+    // terminate all rooms scopes
+    state.rooms.map(room => scope.terminate(room));
+  });
+
+  return chatroom;
+});

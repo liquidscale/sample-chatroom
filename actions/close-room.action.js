@@ -1,7 +1,7 @@
 /**
- * open-room action
+ * The owner or administrator of the room is closing it. The scope will be finalized.
  */
-export const closeRoom = {
+export default {
   key: "chatroom/close",
   bind: { scope: "lqs:chatroom" },
   description: "Terminate a chatroom and finalize the associated scope",

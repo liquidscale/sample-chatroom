@@ -1,23 +1,23 @@
 /**
- * post-message action
+ * Member of a room publish a react to a specific message
  */
 export default {
-  key: "chatroom/message",
+  key: "chatroom/reaction",
   bind: { scope: "chatroom:room:$id" }, // dynamic bind using action payload field `name`
-  description: "One of the member post a message in this room",
+  description: "Member of a room publish a react to a specific message",
   schema: {
     properties: {
       id: { type: "string" },
       user: { type: "string" },
-      message: { type: "string" },
+      messageId: { type: "string" },
+      reaction: { type: "string", enum: ["like", "dislike", "abuse", "love"] },
     },
     required: ["user", "id", "message"],
   },
   permissions: [{ if: ({ actor }) => this.members.find(m => m.username === actor.username), allow: ["*"], hint: "not-member" }],
   reducers: [
-    async function message({ data }, state, { idGen }) {
+    async function message({ data }, state) {
       state.messages.push({
-        id: idGen(),
         ...data,
         ts: new Date(),
         reations: [],

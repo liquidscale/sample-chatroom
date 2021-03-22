@@ -1,20 +1,19 @@
-import { group } from "@liquidscale/scope";
+export default provide(({ scope }) => {
+  const room = scope("chatroom:room:$id");
 
-const room = group("chatroom:room");
+  room.schema("room");
 
-// transports
-// gateway
-// store
-// schema
-// supported actions
+  // Will be called when system scope is initialized
+  room.initializer(async function (state, { scope, data }) {
+    state.members = [];
+    state.messages = [];
+    state.id = data.id;
+    state.system = scope.parent();
+  });
 
-// publications
+  room.finalizer(async function (state, { scope }) {
+    scope.unsubscribe(state.system);
+  });
 
-// store (type, snapshot threshold)
-
-// Configure an initializer to configure the initial state of this scope. data is the action payload
-room.initializer(async function (initialState, { data }) {
-  initialState.members = [];
-  initialState.messages = [];
-  initialState.name = data.name;
+  return room;
 });

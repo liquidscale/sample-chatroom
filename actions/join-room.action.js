@@ -1,7 +1,7 @@
 /**
  * join-room action
  */
-export const joinRoom = {
+export default {
   key: "chatroom/join",
   bind: { scope: "chatroom:room:$id" }, // dynamic bind using action payload field `name`
   description: "Allow a user to ask to join a room",

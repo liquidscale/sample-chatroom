@@ -1,7 +1,7 @@
 /**
  * open-room action
  */
-export const openRoom = {
+export default {
   key: "chatroom/open",
   bind: { scope: "lqs:chatroom" },
   description: "Create a new chatroom. This will spawn a new room scope in our cluster",
