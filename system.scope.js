@@ -4,7 +4,7 @@ export default provide(({ system }) => {
   const chatroom = system("lqs:chatroom");
 
   // because this is the system scope, we force a transport and gateway.
-  chatroom.transport("redis");
+  chatroom.transport("main");
   chatroom.gateway("ws");
   chatroom.store("main"); // per scope, but all spawned scopes will default to this
 
