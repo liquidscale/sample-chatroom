@@ -3,9 +3,6 @@ export default provide(({ system }) => {
 
   const chatroom = system("lqs:chatroom");
 
-  // because this is the system scope, we force a transport and gateway.
-  chatroom.transport("main");
-  chatroom.gateway("ws");
   chatroom.store("main"); // per scope, but all spawned scopes will default to this
 
   // we can configure a JSON schema to help us validate state after reducers have executed
@@ -22,6 +19,7 @@ export default provide(({ system }) => {
   // Will be called when system scope is initialized
   chatroom.initializer(async function (state, { scope, config, schema }) {
     console.log("initializing system scope state");
+
     // Use the schema details to generate our security subscription. This will connect to the security scope and mount only users
     state.users = scope.subscribe(schema.getField("users"));
     // Initialize default state
