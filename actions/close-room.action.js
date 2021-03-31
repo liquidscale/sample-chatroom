@@ -3,7 +3,7 @@
  */
 export default {
   key: "chatroom/close",
-  bind: { scope: "lqs:chatroom" },
+  bind: { scope: "lqs/chatroom" },
   description: "Terminate a chatroom and finalize the associated scope",
   schema: {
     properties: {

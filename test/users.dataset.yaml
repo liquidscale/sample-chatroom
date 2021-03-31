@@ -1,0 +1,17 @@
+scope: security
+height: 0
+type: snapshot
+data:
+  users:
+    - username: admin
+      password: test123$
+      scope: 'system:manage'
+    - username: user1
+      password: test123$
+      scope: 'system:write'
+    - username: user2
+      password: test123$
+      scope: 'system:write'
+    - username: joel
+      password: test123$
+      scope: 'system:read'

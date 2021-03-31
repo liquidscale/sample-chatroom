@@ -10,17 +10,11 @@ stores:
   main:
     type: memory
     limit: 1000
-security:
-  jwt:
-    signkey: DWHh@Y@23eh2HG@#GE@#YTE@#E@#EHJG@#FEH@#FE@#
-  state:
-    users:
-      - username: admin
-        password: test123$
-        scope: 'system:manage'
-      - username: user1
-        password: test123$
-        scope: 'system:write'
-      - username: user2
-        password: test123$
-        scope: 'system:write'
+    snapshotThreshold: 10
+scopes:
+  security:
+    jwt:
+      signkey: DWHh@Y@23eh2HG@#GE@#YTE@#E@#EHJG@#FEH@#FE@#
+      issuer: chatroom.lqsl.cloud
+      audience: chatroom-app
+      duration: 1 day
