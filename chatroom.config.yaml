@@ -2,7 +2,7 @@ gateways:
   ws:
     type: websocket
     port: 9016
-    url: ws://chatroom.covistra.com
+    url: ws://chatroom.lqsl.cloud
 transports:
   main:
     type: memory

@@ -10,18 +10,16 @@ export default provide(({ system }) => {
     properties: {
       name: { type: "string" },
       version: { type: "string" },
-      // rooms: { type: "array", items: { $ref: "chatroom:room" } },
-      // users: { type: "array", items: { type: "subscription", $ref: "lqs/security", target: "default", selector: "$.users" } },
+      rooms: { type: "array", items: { $subscription: "chatroom:room" } },
+      users: { type: "array", items: { $subscription: { scope: "lqs/security", publication: "default", selector: "$.users" } } },
     },
-    required: ["name", "version" /* "rooms", "users" */],
+    required: ["name", "version", "rooms", "users"],
   });
 
   // Will be called when system scope is initialized
-  chatroom.initializer(async function chatroomSystemSetup(state, { console, scope, config, schema }) {
-    console.log("initializing system scope state");
-
+  chatroom.initializer(async function chatroomSystemSetup(state, { scope, config, schema }) {
     // Use the schema details to generate our security subscription. This will connect to the security scope and mount only users
-    state.users = scope.subscribe(schema.getField("users"));
+    state.users = scope.subscribe(schema.getField("users")).asRef();
 
     // Initialize default state
     state.name = config.get("system.name") || "lqs";

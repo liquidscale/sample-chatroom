@@ -3,7 +3,7 @@
  */
 export default {
   key: "chatroom/message",
-  bind: { scope: "chatroom:room:$id" }, // dynamic bind using action payload field `name`
+  bind: { scope: "chatroom/room/${id}" },
   description: "One of the member post a message in this room",
   schema: {
     properties: {
@@ -15,12 +15,12 @@ export default {
   },
   permissions: [{ if: ({ actor }) => this.members.find(m => m.username === actor.username), allow: ["*"], hint: "not-member" }],
   reducers: [
-    async function message({ data }, state, { idGen }) {
+    async function message({ data }, state, { helpers }) {
       state.messages.push({
-        id: idGen(),
+        id: helpers.idGen(),
         ...data,
         ts: new Date(),
-        reations: [],
+        reactions: [],
       });
     },
   ],

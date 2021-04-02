@@ -3,7 +3,7 @@
  */
 export default {
   key: "chatroom/leave",
-  bind: { scope: "chatroom:room:$id" }, // dynamic bind using action payload field `name`
+  bind: { scope: "chatroom/room/${id}" },
   description: "the calling actor wants to leave the room",
   schema: {
     properties: {
