@@ -17,7 +17,10 @@ export default {
   permissions: [{ if: ({ actor }) => this.members.find(m => m.username === actor.username), deny: ["*"], hint: "already-member" }],
   reducers: [
     async function join({ data }, state) {
-      state.users.push({ ...data, joinedAt: new Date() });
+      const already = state.members.find(m => m.username === data.username);
+      if (!already) {
+        state.members.push({ ...data, joinedAt: new Date() });
+      }
     },
   ],
 };

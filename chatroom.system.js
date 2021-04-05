@@ -17,14 +17,19 @@ export default provide(({ system }) => {
   });
 
   // Will be called when system scope is initialized
-  chatroom.initializer(async function chatroomSystemSetup(state, { scope, config, schema }) {
+  chatroom.initializer(async function chatroomSystemSetup(state, { scope, config, schema, Collection }) {
     // Use the schema details to generate our security subscription. This will connect to the security scope and mount only users
-    state.users = scope.subscribe(schema.getField("users")).asRef();
+    //    state.users = scope.subscribe(schema.getField("users")).mount();
+    state.users = []; // subscription to security users list will be maintained here
 
     // Initialize default state
     state.name = config.get("system.name") || "lqs";
     state.version = config.get("system.version") || "1.0";
-    state.rooms = [];
+
+    // We use an LQS collection here. This will behave like a normal array, but if elements are subscriptions, it will
+    // produce their cached values or retrieve a fresh value if no caching is allowed. In this use-case, room scopes will
+    // be pushed by the openRoom action. Each room will be tracked through a subscription behind the scene.
+    state.rooms = Collection();
   });
 
   chatroom.finalizer(async function (state, { scope }) {
@@ -32,6 +37,12 @@ export default provide(({ system }) => {
     scope.unsubscribe(state.users);
     // terminate all rooms scopes
     state.rooms.map(room => scope.terminate(room));
+  });
+
+  // apply a constraints the produced scope state (like in queries or for actions). This is enforced by LQS
+  // on all queries and actions, actions will never see unallowed rooms
+  chatroom.constraint({ selector: "$.rooms" }, function (state, { actor }) {
+    state.rooms = state.rooms.filter(room => room.visibility === "public" || !!room.members.find(m => m.username === actor));
   });
 
   return chatroom;

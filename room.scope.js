@@ -57,5 +57,16 @@ export default provide(({ scope }) => {
     scope.unsubscribe(state.system);
   });
 
+  room.publication("default", {
+    selector: "$",
+    options: {
+      projection: ["-messages"],
+    },
+  });
+
+  room.publication("full", {
+    selector: "$",
+  });
+
   return room;
 });
