@@ -16,7 +16,7 @@ export default {
   permissions: [{ if: ({ actor }) => this.members.find(m => m.username === actor.username), allow: ["*"], hint: "not-member" }],
   reducers: [
     async function message({ data }, state, { helpers }) {
-      state.messages.push({
+      state.messages.unshift({
         id: helpers.idGen(),
         ...data,
         ts: new Date(),

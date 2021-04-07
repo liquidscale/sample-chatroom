@@ -15,9 +15,9 @@ export default {
   reducers: [
     async function closeRoom({ data }, state, { scope }) {
       // remove the reference we keep on the room scope
-      const target = state.rooms.remove(r => r.name === data.name);
+      const target = state.rooms.remove(r => r.id === data.id);
 
-      // destroy the target scope, freeing the cluster as we don't need this scope anymore
+      // destroy this room and free cluster resource
       scope.finalize(target);
     },
   ],
