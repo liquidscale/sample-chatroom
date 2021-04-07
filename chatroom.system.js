@@ -1,6 +1,4 @@
 export default provide(({ system }) => {
-  console.log("initializing system scope");
-
   const chatroom = system("lqs/chatroom");
 
   chatroom.store("main"); // per scope, but all spawned scopes will default to this
@@ -19,21 +17,19 @@ export default provide(({ system }) => {
   // Will be called when system scope is initialized
   chatroom.initializer(async function chatroomSystemSetup(state, { scope, config, schema, Collection }) {
     // Use the schema details to generate our security subscription. This will connect to the security scope and mount only users
-    //    state.users = scope.subscribe(schema.getField("users")).mount();
-    state.users = []; // subscription to security users list will be maintained here
+    state.users = scope.mount(scope.subscribe(schema.getField("users")), { mountpoint: "users" });
 
     // Initialize default state
-    state.name = config.get("system.name") || "lqs";
-    state.version = config.get("system.version") || "1.0";
+    state.name = config.get("system.name", "LQS");
+    state.version = config.get("system.version", "1.0");
 
     // We use an LQS collection here. This will behave like a normal array, but if elements are subscriptions, it will
     // produce their cached values or retrieve a fresh value if no caching is allowed. In this use-case, room scopes will
     // be pushed by the openRoom action. Each room will be tracked through a subscription behind the scene.
-    state.rooms = Collection();
+    state.rooms = scope.mount(Collection(), { mountpoint: "rooms" });
   });
 
   chatroom.finalizer(async function (state, { scope }) {
-    console.log("finalize system scope");
     scope.unsubscribe(state.users);
     // terminate all rooms scopes
     state.rooms.map(room => scope.terminate(room));

@@ -1,5 +1,5 @@
 export default provide(({ scope }) => {
-  const room = scope("chatroom/room/${id}");
+  const room = scope("chatroom/room/${id}", { autoCreate: false });
 
   room.schema({
     type: "object",

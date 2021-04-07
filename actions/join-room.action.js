@@ -3,7 +3,7 @@
  */
 export default {
   key: "chatroom/join",
-  bind: { scope: "chatroom/room/${id}" }, // dynamic bind using action payload field `name`
+  bind: { scope: "chatroom/room/${id}" },
   description: "Allow a user to ask to join a room",
   schema: {
     properties: {
@@ -16,7 +16,7 @@ export default {
   },
   permissions: [{ if: ({ actor }) => this.members.find(m => m.username === actor.username), deny: ["*"], hint: "already-member" }],
   reducers: [
-    async function join({ data }, state) {
+    async function joinRoom({ data }, state) {
       const already = state.members.find(m => m.username === data.username);
       if (!already) {
         state.members.push({ ...data, joinedAt: new Date() });
