@@ -11,7 +11,7 @@ export default {
     },
     required: ["id"],
   },
-  permissions: [{ if: ({ data }) => this.rooms.find(r => r.id === data.id).owner === data.actor.username, allow: ["*"] }],
+  permissions: [{ if: ({ state, data }) => state.rooms.find(r => r.id === data.id).owner === data.actor }],
   reducers: [
     async function closeRoom({ data }, state, { scope }) {
       // remove the reference we keep on the room scope

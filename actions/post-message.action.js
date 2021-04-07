@@ -13,7 +13,7 @@ export default {
     },
     required: ["user", "id", "message"],
   },
-  permissions: [{ if: ({ actor }) => this.members.find(m => m.username === actor.username), allow: ["*"], hint: "not-member" }],
+  permissions: [{ if: ({ state, actor }) => state.members.find(m => m.username === actor), hint: "not-member" }],
   reducers: [
     async function message({ data }, state, { helpers }) {
       state.messages.unshift({

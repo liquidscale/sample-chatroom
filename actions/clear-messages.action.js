@@ -12,7 +12,7 @@ export default {
     },
     required: ["id"],
   },
-  permissions: [{ if: ({ actor }) => this.owner === actor.username, allow: ["*"], hint: "not-owner" }],
+  permissions: [{ if: ({ state, actor }) => state.owner === actor, hint: "not-owner" }],
   reducers: [
     async function clearMessages({ data }, state, { console }) {
       console.log("clearing all messages for room", data.id);

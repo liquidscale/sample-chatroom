@@ -15,14 +15,14 @@ export default {
     },
     required: ["owner", "id"],
   },
-  permissions: [{ if: ({ actor }) => this.users.find(m => m.username === actor.username), allow: ["*"], hint: "no-system-access" }],
+  permissions: [{ if: ({ state, actor }) => state.users.find(m => m.username === actor), hint: "no-system-access" }],
   reducers: [
-    async function openRoom({ data }, state, { helpers, scope }) {
+    async function openRoom({ data }, state, { helpers, scope, Buffer }) {
       // initialize room
       data.openedAt = new Date();
       data.members = [{ username: data.owner }];
       if (data.visibility === "private") {
-        data.inviteCode = helpers.idGen();
+        data.inviteCode = Buffer.from(helpers.idGen()).toString("hex").substring(0, 6).toUpperCase();
       }
 
       // Launch room scope and keep a reference to it in our rooms collection

@@ -11,10 +11,10 @@ export default {
     },
     required: ["id"],
   },
-  permissions: [{ if: ({ actor }) => this.members.find(m => m.username === actor.username), allow: ["*"], hint: "not-member" }],
+  permissions: [{ if: ({ state, actor }) => state.members.find(m => m.username === actor), hint: "not-member" }],
   reducers: [
     async function leave({ actor }, state) {
-      state.members = state.members.filter(m => m.username !== actor.username);
+      state.members = state.members.filter(m => m.username !== actor);
     },
   ],
 };

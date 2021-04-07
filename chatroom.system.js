@@ -17,7 +17,8 @@ export default provide(({ system }) => {
   // Will be called when system scope is initialized
   chatroom.initializer(async function chatroomSystemSetup(state, { scope, config, schema, Collection }) {
     // Use the schema details to generate our security subscription. This will connect to the security scope and mount only users
-    state.users = scope.mount(scope.subscribe(schema.getField("users")), { mountpoint: "users" });
+    //    state.users = scope.mount(scope.subscribe(schema.getField("users")), { mountpoint: "users" });
+    state.users = [{ username: "admin" }, { username: "user1" }, { username: "user2" }, { username: "joel" }];
 
     // Initialize default state
     state.name = config.get("system.name", "LQS");
